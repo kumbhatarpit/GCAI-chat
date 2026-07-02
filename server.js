@@ -13,7 +13,7 @@ app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const MODEL = "gemini-2.5-flash";
+const MODEL = "gemini-2.5-flash-lite";
 const SOURCES_PATH = path.join(__dirname, "sources.txt");
 
 if (!GEMINI_API_KEY) {
@@ -86,9 +86,13 @@ ${sources}
 
     if (!response.ok) {
       console.error("Gemini API error:", data);
-      const msg =
+      let msg =
         (data.error && data.error.message) ||
         "The model provider returned an error.";
+      if (response.status === 429) {
+        msg =
+          "This site is on a free daily plan and just hit its request limit for the moment. Please wait about a minute and try again.";
+      }
       return res.status(502).json({ error: msg });
     }
 
