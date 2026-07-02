@@ -155,7 +155,11 @@
   }
   .empty-state .examples button:hover { border-color: var(--sky); background: var(--sky-soft); }
 
-  .msg { max-width: 100%; }
+  .msg { max-width: 100%; animation: msgIn 0.35s ease-out; }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
   .msg .label {
     display: block;
     font-size: 10px;
@@ -219,6 +223,9 @@
     border-radius: 4px;
     color: var(--navy);
   }
+
+  .bubble { transition: opacity 0.2s ease; }
+  .bubble.swapping { opacity: 0; }
 
   .msg.assistant.thinking .bubble {
     font-family: 'Inter', sans-serif;
@@ -290,6 +297,7 @@
     padding: 10px 0;
     max-height: 140px;
     min-height: 24px;
+    transition: height 0.12s ease;
   }
   #chatInput:focus { outline: none; }
   #chatInput::placeholder { color: var(--muted); }
@@ -406,14 +414,24 @@ function addMessage(role, cls) {
   return div;
 }
 
-function renderAnswer(div, text) {
+function renderAnswer(div, text, truncated) {
   const bubble = div.querySelector('.bubble');
-  try {
-    bubble.innerHTML = marked.parse(text, { breaks: true });
-  } catch (e) {
-    bubble.textContent = text;
-  }
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  bubble.classList.add('swapping');
+  setTimeout(() => {
+    try {
+      bubble.innerHTML = marked.parse(text, { breaks: true });
+    } catch (e) {
+      bubble.textContent = text;
+    }
+    if (truncated) {
+      const note = document.createElement('p');
+      note.style.cssText = 'font-family:Inter,sans-serif;font-size:12px;color:var(--muted);font-style:italic;margin-top:8px;';
+      note.textContent = 'This answer was long and got cut short — ask a narrower follow-up for the rest.';
+      bubble.appendChild(note);
+    }
+    bubble.classList.remove('swapping');
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }, 150);
 }
 
 function renderPlain(div, text) {
@@ -449,7 +467,7 @@ chatForm.addEventListener('submit', async (e) => {
       thinkingDiv.classList.add('error');
       renderPlain(thinkingDiv, data.error || 'Something went wrong.');
     } else {
-      renderAnswer(thinkingDiv, data.answer);
+      renderAnswer(thinkingDiv, data.answer, data.truncated);
       history.push({ role: 'user', content: question });
       history.push({ role: 'assistant', content: data.answer });
     }
