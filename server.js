@@ -44,6 +44,12 @@ app.post("/api/chat", async (req, res) => {
 
   const systemPrompt = `You answer questions using ONLY the source material provided below. Do not use outside knowledge. If the answer isn't in the sources, say clearly that the sources don't cover it, don't guess or fill gaps from general knowledge. Keep answers direct and concise, quoting short specific phrases from the source when useful, but mostly answering in your own words. Never use em dashes.
 
+Format every answer in clean markdown:
+- Short paragraphs (2-4 sentences), never one dense block of text.
+- Use a bullet or numbered list whenever you're listing more than two items (pricing tiers, deliverables, names, dates, etc).
+- Bold the key term, name, or number being asked about, sparingly, not entire sentences.
+- No headings (no # symbols).
+
 SOURCES:
 """
 ${sources}
