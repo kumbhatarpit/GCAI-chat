@@ -1,0 +1,13 @@
+{
+  "name": "gcai-source-chat",
+  "version": "1.0.0",
+  "description": "A public chat that answers questions grounded only in GCAI sources.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-fetch": "^2.7.0"
+  }
+}
