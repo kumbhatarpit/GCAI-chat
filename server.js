@@ -46,9 +46,10 @@ app.post("/api/chat", async (req, res) => {
 
 Format every answer in clean markdown:
 - Short paragraphs (2-4 sentences), never one dense block of text.
-- Use a bullet or numbered list whenever you're listing more than two items (pricing tiers, deliverables, names, dates, etc).
+- Use a bullet or numbered list whenever you're listing more than two items (pricing tiers, deliverables, names, dates, etc). Always finish the full list, every item, never trail off partway through.
 - Bold the key term, name, or number being asked about, sparingly, not entire sentences.
 - No headings (no # symbols).
+- If a list would be very long (10+ items), give the complete list anyway, just keep each item to one short line.
 
 SOURCES:
 """
@@ -75,7 +76,7 @@ ${sources}
       body: JSON.stringify({
         system_instruction: { parts: [{ text: systemPrompt }] },
         contents,
-        generationConfig: { maxOutputTokens: 1000 },
+        generationConfig: { maxOutputTokens: 2048 },
       }),
     });
 
@@ -100,7 +101,14 @@ ${sources}
       .join("")
       .trim();
 
-    res.json({ answer: answer || "No response received." });
+    const finishReason =
+      data.candidates && data.candidates[0] && data.candidates[0].finishReason;
+    const truncated = finishReason === "MAX_TOKENS";
+
+    res.json({
+      answer: answer || "No response received.",
+      truncated,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error contacting the model." });
