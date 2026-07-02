@@ -60,12 +60,22 @@
     align-items: flex-start;
     gap: 14px;
   }
-  .logo-mark {
-    width: 40px;
-    height: 40px;
+  .logo-chip {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     margin-top: 2px;
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+    box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+  }
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    display: block;
   }
   .header-text h1 {
     font-family: 'Source Serif 4', Georgia, serif;
@@ -93,7 +103,8 @@
   }
   @media (min-width: 600px) {
     header { padding-top: calc(24px + var(--safe-t)); padding-bottom: 20px; }
-    .logo-mark { width: 46px; height: 46px; }
+    .logo-chip { width: 58px; height: 58px; }
+    .logo-mark { width: 38px; height: 38px; }
     .header-text h1 { font-size: 20px; }
     .header-text .tagline { font-size: 11px; }
     .header-text .desc { display: block; font-size: 12.5px; }
@@ -119,8 +130,12 @@
   .empty-state {
     margin: auto;
     text-align: center;
-    max-width: 440px;
-    padding: 0 8px;
+    max-width: 460px;
+    padding: 36px 28px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(22, 40, 63, 0.06);
   }
   .empty-state .empty-mark {
     width: 44px;
@@ -194,8 +209,12 @@
     font-size: 16px;
     line-height: 1.7;
     color: var(--ink);
+    background: var(--panel);
+    border: 1px solid var(--line);
     border-left: 3px solid var(--sky);
-    padding: 2px 0 2px 16px;
+    border-radius: 4px 12px 12px 4px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(22, 40, 63, 0.06);
   }
   .msg.assistant .bubble > *:first-child { margin-top: 0; }
   .msg.assistant .bubble > *:last-child { margin-bottom: 0; }
@@ -337,7 +356,7 @@
 
 <header>
   <div class="header-inner">
-    <img src="/gcai-logo.png" alt="GCAI" class="logo-mark">
+    <div class="logo-chip"><img src="/gcai-logo.png" alt="GCAI" class="logo-mark"></div>
     <div class="header-text">
       <h1>Ask GCAI: Two Nations, One Legal Future</h1>
       <div class="tagline">Strategiser &middot; Enabler &middot; Protector</div>
